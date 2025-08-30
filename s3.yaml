@@ -17,6 +17,14 @@ Resources:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
+      
+      LifecycleConfiguration:
+        Rules:
+          - Id: MoveToGlacierIRAfter180Days
+            Status: Enabled
+            Transitions:
+              - StorageClass: GLACIER_IR
+                TransitionInDays: 180
 
 Outputs:
   BucketName:
