@@ -27,5 +27,5 @@ phases:
       - mv imagedefinitions.json ../
 
 artifacts:
-    # CodeBuild looks for artifacts in the root directory by default.
+    # CodeBuild always looks for artifacts in the REPO ROOT FOLDER
     files: imagedefinitions.json
