@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Creates a secure S3 bucket with versioning and encryption enabled."
+
+Parameters:
+  BucketNameSuffix:
+    Type: String
+    Description: "A unique suffix to be appended to the bucket name."
+
+Resources:
+  S3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      # Constructing a globally unique bucket name is crucial.
+      BucketName: !Sub "my-app-data-${AWS::AccountId}-${BucketNameSuffix}"
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+Outputs:
+  BucketName:
+    Description: "The name of the S3 bucket."
+    Value: !Ref S3Bucket
+  BucketARN:
+    Description: "The ARN of the S3 bucket."
+    Value: !GetAtt S3Bucket.Arn
