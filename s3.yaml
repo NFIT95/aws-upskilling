@@ -1,25 +1,30 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "Creates a secure S3 bucket with versioning, encryption, and public access blocked."
+Description: "Creates a secure S3 bucket with a lifecycle policy, versioning, and encryption."
 
 Resources:
   S3Bucket:
     Type: "AWS::S3::Bucket"
     Properties:
       BucketName: !Sub "nf-aws-upskilling-${AWS::AccountId}-${AWS::Region}"
-
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
-
       VersioningConfiguration:
         Status: Enabled
-
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
+      
+      LifecycleConfiguration:
+        Rules:
+          - Id: MoveToGlacierIRAfter180Days
+            Status: Enabled
+            Transitions:
+              - StorageClass: GLACIER_IR
+                TransitionInDays: 180
 
 Outputs:
   BucketName:
@@ -27,7 +32,6 @@ Outputs:
     Value: !Ref S3Bucket
     Export:
       Name: !Sub "${AWS::StackName}-BucketName"
-
   BucketARN:
     Description: "The ARN (Amazon Resource Name) of the S3 bucket."
     Value: !GetAtt S3Bucket.Arn
