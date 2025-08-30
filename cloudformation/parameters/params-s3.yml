@@ -1,5 +1,0 @@
-Parameters:
-  BucketPrefix:
-    Description: S3 bucket prefix
-    Type: string
-    Default: nf-aws-upskilling
