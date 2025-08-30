@@ -1,17 +1,11 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: "Creates a secure S3 bucket with versioning and encryption enabled."
 
-Parameters:
-  BucketNameSuffix:
-    Type: String
-    Description: "A unique suffix to be appended to the bucket name."
-
 Resources:
   S3Bucket:
     Type: "AWS::S3::Bucket"
     Properties:
-      # Constructing a globally unique bucket name is crucial.
-      BucketName: !Sub "my-app-data-${AWS::AccountId}-${BucketNameSuffix}"
+      BucketName: !Sub "my-app-data-${AWS::AccountId}-nf-aws-upskilling"
       AccessControl: Private
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
