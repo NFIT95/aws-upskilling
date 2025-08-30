@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Creates a secure S3 bucket with versioning, encryption, and public access blocked."
+
+Resources:
+  S3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: !Sub "nf-aws-upskilling-${AWS::AccountId}-${AWS::Region}"
+
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+      VersioningConfiguration:
+        Status: Enabled
+
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+Outputs:
+  BucketName:
+    Description: "The name of the newly created S3 bucket."
+    Value: !Ref S3Bucket
+    Export:
+      Name: !Sub "${AWS::StackName}-BucketName"
+
+  BucketARN:
+    Description: "The ARN (Amazon Resource Name) of the S3 bucket."
+    Value: !GetAtt S3Bucket.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}-BucketARN"
